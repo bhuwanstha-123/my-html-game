@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Click the Box Game</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #f0f0f0;
+    }
+
+    #gameArea {
+      width: 400px;
+      height: 400px;
+      background-color: white;
+      border: 2px solid #333;
+      margin: 20px auto;
+      position: relative;
+    }
+
+    #box {
+      width: 50px;
+      height: 50px;
+      background-color: red;
+      position: absolute;
+      cursor: pointer;
+      display: none;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Click the Box!</h1>
+  <p>Score: <span id="score">0</span></p>
+  <p>Time Left: <span id="time">30</span>s</p>
+
+  <button onclick="startGame()">Start Game</button>
+
+  <div id="gameArea">
+    <div id="box" onclick="boxClicked()"></div>
+  </div>
+
+  <script>
+    let score = 0;
+    let timeLeft = 30;
+    let gameInterval;
+    let timerInterval;
+
+    const box = document.getElementById("box");
+    const gameArea = document.getElementById("gameArea");
+    const scoreDisplay = document.getElementById("score");
+    const timeDisplay = document.getElementById("time");
+
+    function startGame() {
+      score = 0;
+      timeLeft = 30;
+      scoreDisplay.textContent = score;
+      timeDisplay.textContent = timeLeft;
+
+      box.style.display = "block";
+      moveBox();
+
+      gameInterval = setInterval(moveBox, 800);
+      timerInterval = setInterval(updateTime, 1000);
+    }
+
+    function moveBox() {
+      const maxX = gameArea.clientWidth - box.clientWidth;
+      const maxY = gameArea.clientHeight - box.clientHeight;
+
+      const randomX = Math.floor(Math.random() * maxX);
+      const randomY = Math.floor(Math.random() * maxY);
+
+      box.style.left = randomX + "px";
+      box.style.top = randomY + "px";
+    }
+
+    function boxClicked() {
+      score++;
+      scoreDisplay.textContent = score;
+      moveBox();
+    }
+
+    function updateTime() {
+      timeLeft--;
+      timeDisplay.textContent = timeLeft;
+
+      if (timeLeft <= 0) {
+        endGame();
+      }
+    }
+
+    function endGame() {
+      clearInterval(gameInterval);
+      clearInterval(timerInterval);
+      box.style.display = "none";
+      alert("Game Over! Your score: " + score);
+    }
+  </script>
+
+</body>
+</html>
